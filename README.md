@@ -1,28 +1,24 @@
-# P2P File Sharing System
+# Multi-Threaded HTTP Server
 
-A pure Python implementation of a Peer-to-Peer file sharing system for Computer Networks projects. This system uses TCP sockets for communication and SHA1 hashing for file integrity verification.
+A pure Python implementation of a multi-threaded HTTP server using low-level TCP socket programming. This server supports GET and POST requests with comprehensive security features, thread pool management, and detailed logging.
 
 ## 📁 Project Structure
 
 ```
 p2p_filesharing_python/
 │
-├── tracker/
-│   └── tracker.py          # Central registry using TCP sockets
-│
-├── peer/
-│   └── peer.py             # Serves & uploads chunks
-│
-├── client/
-│   └── client.py           # Downloads chunks from peers
-│
-├── utils/
-│   └── hasher.py           # SHA1 chunk hashing
-│
-├── shared/                 # Folder for seeding files
-├── downloads/              # Folder for received files
-│
-└── main.py                 # Entry point to select role (tracker / peer / client)
+├── http_server.py          # Main HTTP server implementation
+├── test_client.py          # Test client for server validation
+├── sample.json             # Sample JSON for POST testing
+├── create_jpeg.py          # Utility to create test JPEG file
+├── resources/              # Directory for serving files
+│   ├── index.html          # Main HTML test page
+│   ├── test.txt            # Sample text file
+│   ├── test.png            # Sample PNG image
+│   ├── test.jpg            # Sample JPEG image
+│   └── uploads/            # Directory for POST uploads
+├── README.md               # This documentation
+└── QUICK_REFERENCE.md      # Quick command reference
 ```
 
 ## 🚀 Quick Start
@@ -40,220 +36,155 @@ p2p_filesharing_python/
 
 ## 🔧 Configuration
 
-The system uses environment variables for configuration:
+The server accepts command-line arguments for configuration:
 
-| Variable | Default Value | Description |
+| Argument | Default Value | Description |
 |----------|---------------|-------------|
-| `ROLE` | `tracker` | Role to run: `tracker`, `peer`, or `client` |
-| `TRACKER_HOST` | `127.0.0.1` | Tracker server IP address |
-| `TRACKER_PORT` | `8000` | Tracker server port |
-| `PEER_PORT` | `9001` | Peer server port |
-| `SHARED_PATH` | `shared` | Directory containing files to share |
-| `DOWNLOAD_PATH` | `downloads` | Directory for downloaded files |
-| `PIECE_SIZE` | `16384` | Size of file chunks in bytes |
+| `--host` | `127.0.0.1` | Server host address |
+| `--port` | `8080` | Server port number |
+| `--max-threads` | `10` | Maximum thread pool size |
 
 ## 📋 Operating Instructions
 
-### Step 1: Start the Tracker
-
-The tracker acts as a central registry that maintains information about available files and peers.
+### Step 1: Start the HTTP Server
 
 **Windows PowerShell:**
 ```powershell
 cd "C:\path\to\p2p_filesharing_python"
-$env:ROLE="tracker"
-python main.py
+python http_server.py --host 127.0.0.1 --port 8080 --max-threads 10
 ```
 
 **Windows Command Prompt:**
 ```cmd
 cd C:\path\to\p2p_filesharing_python
-set ROLE=tracker
-python main.py
+python http_server.py --host 127.0.0.1 --port 8080 --max-threads 10
 ```
 
 **Linux/macOS:**
 ```bash
 cd /path/to/p2p_filesharing_python
-export ROLE=tracker
-python main.py
+python http_server.py --host 127.0.0.1 --port 8080 --max-threads 10
 ```
 
 **Expected Output:**
 ```
-[TRACKER] Listening on 0.0.0.0:8000
+[2025-01-10 12:00:00] [INFO] HTTP Server initialized: 127.0.0.1:8080, max_threads=10
+[2025-01-10 12:00:00] [INFO] Server started on 127.0.0.1:8080
+[2025-01-10 12:00:00] [INFO] Thread pool started with 10 threads
 ```
 
-### Step 2: Start a Peer
+### Step 2: Test the Server
 
-Peers share files by registering them with the tracker and serving chunks to clients.
-
-**Windows PowerShell:**
-```powershell
-cd "C:\path\to\p2p_filesharing_python"
-$env:ROLE="peer"
-python main.py
-```
-
-**Windows Command Prompt:**
-```cmd
-cd C:\path\to\p2p_filesharing_python
-set ROLE=peer
-python main.py
-```
-
-**Linux/macOS:**
+#### Using the Test Client
 ```bash
-cd /path/to/p2p_filesharing_python
-export ROLE=peer
-python main.py
+python test_client.py
 ```
 
-**Expected Output:**
-```
-[PEER] Listening on port 9001
-Registering test_file.txt with hash 74ef768475f5b2d124d3571d09ff684bc97e09c8
-[TRACKER RESPONSE] {"status": "registered"}
-```
+#### Using curl Commands
 
-**Important Notes:**
-- Place files you want to share in the `shared/` directory
-- The peer will automatically register all files in the shared directory
-- Each file gets a unique SHA1 hash based on its content and chunk structure
-
-### Step 3: Start a Client
-
-Clients download files by querying the tracker for peers and downloading chunks.
-
-**Windows PowerShell:**
-```powershell
-cd "C:\path\to\p2p_filesharing_python"
-$env:ROLE="client"
-python main.py
-```
-
-**Windows Command Prompt:**
-```cmd
-cd C:\path\to\p2p_filesharing_python
-set ROLE=client
-python main.py
-```
-
-**Linux/macOS:**
+**Test GET Request (HTML):**
 ```bash
-cd /path/to/p2p_filesharing_python
-export ROLE=client
-python main.py
+curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/
 ```
 
-**Interactive Prompts:**
-```
-Enter info_hash to download: 74ef768475f5b2d124d3571d09ff684bc97e09c8
-Enter filename: test_file.txt
-Enter total file size in bytes: 525
+**Test GET Request (Text File):**
+```bash
+curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/test.txt
 ```
 
-**Expected Output:**
+**Test GET Request (PNG Image):**
+```bash
+curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/test.png -o downloaded.png
 ```
-Download complete -> downloads\test_file.txt
+
+**Test POST Request (JSON Upload):**
+```bash
+curl -X POST -H "Content-Type: application/json" -H "Host: 127.0.0.1:8080" -d '{"test": "data"}' http://127.0.0.1:8080/
 ```
+
+#### Using Web Browser
+Open your browser and navigate to: `http://127.0.0.1:8080/`
 
 ## 🔄 Complete Workflow Example
 
-### Scenario: Sharing and Downloading a File
+### Scenario: Testing All Server Features
 
-1. **Prepare a file to share:**
+1. **Start the server:**
    ```bash
-   # Create a test file
-   echo "Hello, P2P World!" > shared/my_file.txt
+   python http_server.py --host 127.0.0.1 --port 8080 --max-threads 10
    ```
 
-2. **Start the tracker (Terminal 1):**
-   ```powershell
-   $env:ROLE="tracker"
-   python main.py
-   ```
-
-3. **Start a peer (Terminal 2):**
-   ```powershell
-   $env:ROLE="peer"
-   python main.py
-   ```
-
-4. **Start a client (Terminal 3):**
-   ```powershell
-   $env:ROLE="client"
-   python main.py
-   ```
-
-5. **Enter download information when prompted:**
-   - **Info Hash:** Use the hash displayed by the peer
-   - **Filename:** `my_file.txt`
-   - **File Size:** Check file size in bytes
-
-6. **Verify download:**
+2. **Test HTML serving:**
    ```bash
-   # Check downloaded file
-   type downloads\my_file.txt
+   curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/
+   ```
+
+3. **Test file downloads:**
+   ```bash
+   curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/test.txt
+   curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/test.png -o test.png
+   ```
+
+4. **Test JSON upload:**
+   ```bash
+   curl -X POST -H "Content-Type: application/json" -H "Host: 127.0.0.1:8080" -d @sample.json http://127.0.0.1:8080/
+   ```
+
+5. **Test security features:**
+   ```bash
+   curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/../etc/passwd
    ```
 
 ## 🛠️ Advanced Usage
 
-### Multiple Peers
-
-You can run multiple peers to distribute file chunks across different machines:
-
-```powershell
-# Peer 1
-$env:ROLE="peer"
-$env:PEER_PORT="9001"
-python main.py
-
-# Peer 2 (in another terminal)
-$env:ROLE="peer"
-$env:PEER_PORT="9002"
-python main.py
-```
-
 ### Custom Configuration
 
-```powershell
-# Custom tracker host and port
-$env:TRACKER_HOST="192.168.1.100"
-$env:TRACKER_PORT="8080"
-$env:ROLE="peer"
-python main.py
+```bash
+# Custom host and port
+python http_server.py --host 0.0.0.0 --port 9000 --max-threads 20
+
+# High-performance configuration
+python http_server.py --host 127.0.0.1 --port 8080 --max-threads 50
 ```
 
-### File Information
-
-To get file information (hash, size) before downloading:
+### Load Testing
 
 ```python
-from utils.hasher import file_info_hash
-import os
+import requests
+import threading
+import time
 
-file_path = "shared/my_file.txt"
-info = file_info_hash(file_path)
-print(f"Hash: {info['info_hash']}")
-print(f"Size: {info['size']} bytes")
+def make_request():
+    response = requests.get('http://127.0.0.1:8080/test.txt', 
+                          headers={'Host': '127.0.0.1:8080'})
+    return response.status_code == 200
+
+# Test with 100 concurrent requests
+threads = []
+for i in range(100):
+    t = threading.Thread(target=make_request)
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()
 ```
 
 ## 🔍 Troubleshooting
 
 ### Common Issues
 
-**Issue: "No connection could be made"**
-- **Solution:** Ensure the tracker is running before starting peers or clients
-- **Check:** Verify tracker is listening on the correct port (default: 8000)
+**Issue: "Address already in use"**
+- **Solution:** Change the port or stop the existing server
+- **Check:** `netstat -an | findstr :8080` (Windows) or `lsof -i :8080` (Linux/macOS)
 
-**Issue: "No peers found for this file"**
-- **Solution:** Ensure at least one peer is running and has registered the file
-- **Check:** Verify the file exists in the peer's `shared/` directory
+**Issue: "Connection refused"**
+- **Solution:** Ensure the server is running and accessible
+- **Check:** Verify host and port configuration
 
 **Issue: "Permission denied" errors**
 - **Solution:** Run terminal as administrator (Windows) or check file permissions
-- **Check:** Ensure write permissions for the `downloads/` directory
+- **Check:** Ensure write permissions for the `resources/uploads/` directory
 
 **Issue: "Module not found" errors**
 - **Solution:** Ensure you're running from the correct directory
@@ -261,7 +192,7 @@ print(f"Size: {info['size']} bytes")
 
 ### Debug Mode
 
-Enable verbose logging by modifying the Python files:
+Enable verbose logging by modifying the server code:
 
 ```python
 import logging
@@ -272,94 +203,105 @@ logging.basicConfig(level=logging.DEBUG)
 
 ### Components
 
-1. **Tracker (`tracker.py`)**
-   - Central registry server
-   - Maintains peer and file information
-   - Handles peer registration and client queries
-   - Uses TCP sockets for communication
+1. **HTTPRequest Class**
+   - Parses incoming HTTP requests
+   - Extracts method, path, headers, and body
+   - Validates request format
 
-2. **Peer (`peer.py`)**
-   - File sharing server
-   - Registers files with tracker
-   - Serves file chunks to clients
-   - Handles multiple concurrent connections
+2. **HTTPResponse Class**
+   - Constructs HTTP responses
+   - Handles different content types
+   - Manages headers and status codes
 
-3. **Client (`client.py`)**
-   - File download client
-   - Queries tracker for peer information
-   - Downloads chunks from multiple peers
-   - Reconstructs complete files
+3. **HTTPServer Class**
+   - Main server implementation
+   - Manages thread pool and connection queue
+   - Handles client connections and request processing
 
-4. **Utilities (`hasher.py`)**
-   - SHA1 hash generation for files and chunks
-   - File chunking and reconstruction
-   - Integrity verification
+4. **Thread Pool Management**
+   - Configurable thread pool size
+   - Connection queue for handling high load
+   - Thread-safe operations with mutexes
 
 ### Communication Protocol
 
 ```
-Client → Tracker: Request peer list for file
-Tracker → Client: Return list of peers with file chunks
-Client → Peer: Request specific file chunk
-Peer → Client: Send chunk data
-Client: Reconstruct complete file
+Client → Server: HTTP Request (GET/POST)
+Server → Client: HTTP Response with appropriate status
+Server: Logs all activities with timestamps
+Server: Manages persistent connections with timeouts
 ```
 
 ## 🧪 Testing
 
-### Automated Test
+### Automated Test Suite
 
-Run the built-in test to verify system functionality:
+Run the comprehensive test suite:
 
-```python
-# Create a test file
-echo "Test content" > shared/test.txt
-
-# Run automated test
-python -c "
-import subprocess, time, os
-from threading import Thread
-
-# Start tracker
-tracker = subprocess.Popen(['python', 'main.py'], env={**os.environ, 'ROLE': 'tracker'})
-time.sleep(2)
-
-# Start peer
-peer = subprocess.Popen(['python', 'main.py'], env={**os.environ, 'ROLE': 'peer'})
-time.sleep(2)
-
-# Test client (simplified)
-print('System test completed successfully!')
-
-# Cleanup
-tracker.terminate()
-peer.terminate()
-"
+```bash
+python test_client.py
 ```
+
+**Test Coverage:**
+- ✅ GET requests for HTML, TXT, PNG, JPG files
+- ✅ POST requests with JSON data
+- ✅ Path traversal protection
+- ✅ Method validation (405 for unsupported methods)
+- ✅ Content type validation (415 for invalid types)
+- ✅ Concurrent request handling
+- ✅ Host header validation
+- ✅ Keep-alive connections
 
 ### Manual Testing Checklist
 
-- [ ] Tracker starts and listens on correct port
-- [ ] Peer registers files with tracker
-- [ ] Client can query tracker for peer information
-- [ ] Client can download chunks from peer
-- [ ] Downloaded file matches original content
-- [ ] Multiple peers can serve the same file
-- [ ] System handles network errors gracefully
+- [ ] Server starts and listens on correct port
+- [ ] HTML files served with correct Content-Type
+- [ ] Binary files (PNG, JPG) served with Content-Disposition
+- [ ] Text files served with proper encoding
+- [ ] JSON uploads create timestamped files
+- [ ] Path traversal attempts return 403
+- [ ] Unsupported methods return 405
+- [ ] Invalid content types return 415
+- [ ] Host header validation works
+- [ ] Keep-alive connections function properly
+- [ ] Request limits enforced (100 per connection)
+- [ ] Comprehensive logging with timestamps
 
 ## 📈 Performance Considerations
 
-- **Chunk Size:** Default 16KB chunks provide good balance between overhead and efficiency
-- **Concurrent Downloads:** System supports downloading multiple chunks simultaneously
-- **Memory Usage:** Files are processed in chunks to minimize memory footprint
-- **Network Efficiency:** TCP sockets provide reliable data transmission
+- **Thread Pool:** Configurable size (default: 10 threads)
+- **Connection Queue:** Handles up to 100 concurrent connections
+- **Request Size Limit:** 8192 bytes maximum
+- **Connection Timeout:** 30 seconds for idle connections
+- **Request Limit:** 100 requests per persistent connection
+- **Memory Usage:** Efficient chunk-based file serving
+
+## 🔒 Security Features
+
+- **Path Traversal Protection:** Blocks `../` and similar patterns
+- **Host Header Validation:** Ensures requests match server address
+- **Method Validation:** Only allows GET and POST methods
+- **Content Type Validation:** Strict validation for POST requests
+- **Request Size Limits:** Prevents large request attacks
+- **Connection Limits:** Prevents connection exhaustion
+
+## 📝 Logging
+
+The server provides comprehensive logging:
+
+- **Server startup/shutdown events**
+- **File transfer activities**
+- **Security violations (path traversal, invalid hosts)**
+- **Thread pool status and queuing warnings**
+- **Connection management events**
+- **Error conditions and exceptions**
 
 ## 🔒 Security Notes
 
 - This is a demonstration system for educational purposes
 - No authentication or encryption is implemented
 - Use only on trusted networks
-- Consider implementing security measures for production use
+- Consider implementing additional security measures for production use
 
 ## 📝 License
 
@@ -371,5 +313,4 @@ This is an academic project. For educational use only.
 
 ---
 
-**Happy File Sharing! 🚀**
-
+**Happy HTTP Serving! 🚀**

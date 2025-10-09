@@ -1,0 +1,36 @@
+{
+  "name": "sample_test_data",
+  "description": "This is a sample JSON file for testing the HTTP server POST functionality",
+  "timestamp": "2025-01-10T12:00:00Z",
+  "version": "1.0",
+  "features": [
+    "Multi-threaded server",
+    "GET requests for HTML, PNG, JPEG, TXT",
+    "POST requests for JSON uploads",
+    "Path traversal protection",
+    "Host header validation",
+    "Keep-alive connections",
+    "Request limits",
+    "Comprehensive logging"
+  ],
+  "test_data": {
+    "numbers": [1, 2, 3, 4, 5],
+    "strings": ["hello", "world", "test"],
+    "boolean": true,
+    "null_value": null,
+    "nested": {
+      "level1": {
+        "level2": "deep_value"
+      }
+    }
+  },
+  "server_info": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "max_threads": 10,
+    "supported_methods": ["GET", "POST"],
+    "max_request_size": 8192,
+    "connection_timeout": 30,
+    "max_requests_per_connection": 100
+  }
+}

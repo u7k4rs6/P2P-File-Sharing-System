@@ -1,0 +1,8 @@
+This is a test text file for the HTTP server.
+It contains sample content to demonstrate text file serving capabilities.
+The server should serve this file with proper Content-Type headers.
+This file tests the GET request functionality for .txt files.
+File size: This file is small and should be served quickly.
+Content-Type: text/plain
+Encoding: UTF-8
+Test completed successfully!
