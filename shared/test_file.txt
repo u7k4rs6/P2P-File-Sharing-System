@@ -1,0 +1,10 @@
+This is a test file for the P2P file sharing system.
+It contains some sample content to demonstrate the file sharing capabilities.
+The file will be split into chunks and distributed across peers.
+Each chunk will be hashed using SHA1 for integrity verification.
+This is line 5 of our test file.
+Line 6 continues the test content.
+Line 7 shows how the system handles multi-line files.
+Line 8 demonstrates chunk-based file transfer.
+Line 9 is near the end of our test content.
+This is the final line of the test file.
