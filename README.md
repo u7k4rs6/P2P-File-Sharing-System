@@ -52,7 +52,7 @@ The system uses environment variables for configuration:
 | `DOWNLOAD_PATH` | `downloads` | Directory for downloaded files |
 | `PIECE_SIZE` | `16384` | Size of file chunks in bytes |
 
-## 📋 Operating Instructions
+## Operating Instructions
 
 ### Step 1: Start the Tracker
 
