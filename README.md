@@ -2,7 +2,7 @@
 
 A pure Python implementation of a Peer-to-Peer file sharing system for Computer Networks projects. This system uses TCP sockets for communication and SHA1 hashing for file integrity verification.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 p2p_filesharing_python/
@@ -25,7 +25,7 @@ p2p_filesharing_python/
 └── main.py                 # Entry point to select role (tracker / peer / client)
 ```
 
-## 🚀 Quick Start
+## Start
 
 ### Prerequisites
 - Python 3.6 or higher
@@ -38,7 +38,7 @@ p2p_filesharing_python/
    cd p2p_filesharing_python
    ```
 
-## 🔧 Configuration
+## Configuration
 
 The system uses environment variables for configuration:
 
@@ -158,7 +158,7 @@ Enter total file size in bytes: 525
 Download complete -> downloads\test_file.txt
 ```
 
-## 🔄 Complete Workflow Example
+## Complete Workflow Example
 
 ### Scenario: Sharing and Downloading a File
 
@@ -197,7 +197,7 @@ Download complete -> downloads\test_file.txt
    type downloads\my_file.txt
    ```
 
-## 🛠️ Advanced Usage
+## Advanced Usage
 
 ### Multiple Peers
 
@@ -239,7 +239,7 @@ print(f"Hash: {info['info_hash']}")
 print(f"Size: {info['size']} bytes")
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -268,7 +268,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-## 📊 System Architecture
+## System Architecture
 
 ### Components
 
@@ -305,7 +305,7 @@ Peer → Client: Send chunk data
 Client: Reconstruct complete file
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Automated Test
 
@@ -347,29 +347,21 @@ peer.terminate()
 - [ ] Multiple peers can serve the same file
 - [ ] System handles network errors gracefully
 
-## 📈 Performance Considerations
+## Performance Considerations
 
 - **Chunk Size:** Default 16KB chunks provide good balance between overhead and efficiency
 - **Concurrent Downloads:** System supports downloading multiple chunks simultaneously
 - **Memory Usage:** Files are processed in chunks to minimize memory footprint
 - **Network Efficiency:** TCP sockets provide reliable data transmission
 
-## 🔒 Security Notes
+## Security Notes
 
 - This is a demonstration system for educational purposes
 - No authentication or encryption is implemented
 - Use only on trusted networks
 - Consider implementing security measures for production use
 
-## 📝 License
+## This project is created for educational purposes as part of the Computer Networks Course.
 
-This project is created for educational purposes as part of a Computer Networks course.
 
-## 🤝 Contributing
-
-This is an academic project. For educational use only.
-
----
-
-**Happy File Sharing! 🚀**
 
