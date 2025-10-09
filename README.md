@@ -2,7 +2,7 @@
 
 A pure Python implementation of a multi-threaded HTTP server using low-level TCP socket programming. This server supports GET and POST requests with comprehensive security features, thread pool management, and detailed logging.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 p2p_filesharing_python/
@@ -21,7 +21,7 @@ p2p_filesharing_python/
 └── QUICK_REFERENCE.md      # Quick command reference
 ```
 
-## 🚀 Quick Start
+## Start
 
 ### Prerequisites
 - Python 3.6 or higher
@@ -34,7 +34,7 @@ p2p_filesharing_python/
    cd p2p_filesharing_python
    ```
 
-## 🔧 Configuration
+## Configuration
 
 The server accepts command-line arguments for configuration:
 
@@ -44,7 +44,7 @@ The server accepts command-line arguments for configuration:
 | `--port` | `8080` | Server port number |
 | `--max-threads` | `10` | Maximum thread pool size |
 
-## 📋 Operating Instructions
+## Operating Instructions
 
 ### Step 1: Start the HTTP Server
 
@@ -105,7 +105,7 @@ curl -X POST -H "Content-Type: application/json" -H "Host: 127.0.0.1:8080" -d '{
 #### Using Web Browser
 Open your browser and navigate to: `http://127.0.0.1:8080/`
 
-## 🔄 Complete Workflow Example
+## Workflow Example
 
 ### Scenario: Testing All Server Features
 
@@ -135,7 +135,7 @@ Open your browser and navigate to: `http://127.0.0.1:8080/`
    curl -H "Host: 127.0.0.1:8080" http://127.0.0.1:8080/../etc/passwd
    ```
 
-## 🛠️ Advanced Usage
+## Advanced Usage
 
 ### Custom Configuration
 
@@ -170,7 +170,7 @@ for t in threads:
     t.join()
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -199,7 +199,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-## 📊 System Architecture
+## System Architecture
 
 ### Components
 
@@ -232,7 +232,7 @@ Server: Logs all activities with timestamps
 Server: Manages persistent connections with timeouts
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Automated Test Suite
 
@@ -243,14 +243,14 @@ python test_client.py
 ```
 
 **Test Coverage:**
-- ✅ GET requests for HTML, TXT, PNG, JPG files
-- ✅ POST requests with JSON data
-- ✅ Path traversal protection
-- ✅ Method validation (405 for unsupported methods)
-- ✅ Content type validation (415 for invalid types)
-- ✅ Concurrent request handling
-- ✅ Host header validation
-- ✅ Keep-alive connections
+- GET requests for HTML, TXT, PNG, JPG files
+- POST requests with JSON data
+- Path traversal protection
+- Method validation (405 for unsupported methods)
+- Content type validation (415 for invalid types)
+- Concurrent request handling
+- Host header validation
+- Keep-alive connections
 
 ### Manual Testing Checklist
 
@@ -267,7 +267,7 @@ python test_client.py
 - [ ] Request limits enforced (100 per connection)
 - [ ] Comprehensive logging with timestamps
 
-## 📈 Performance Considerations
+## Performance Considerations
 
 - **Thread Pool:** Configurable size (default: 10 threads)
 - **Connection Queue:** Handles up to 100 concurrent connections
@@ -276,7 +276,7 @@ python test_client.py
 - **Request Limit:** 100 requests per persistent connection
 - **Memory Usage:** Efficient chunk-based file serving
 
-## 🔒 Security Features
+## Security Features
 
 - **Path Traversal Protection:** Blocks `../` and similar patterns
 - **Host Header Validation:** Ensures requests match server address
@@ -285,7 +285,7 @@ python test_client.py
 - **Request Size Limits:** Prevents large request attacks
 - **Connection Limits:** Prevents connection exhaustion
 
-## 📝 Logging
+## Logging
 
 The server provides comprehensive logging:
 
@@ -296,21 +296,11 @@ The server provides comprehensive logging:
 - **Connection management events**
 - **Error conditions and exceptions**
 
-## 🔒 Security Notes
+## Security Notes
 
 - This is a demonstration system for educational purposes
 - No authentication or encryption is implemented
 - Use only on trusted networks
 - Consider implementing additional security measures for production use
 
-## 📝 License
-
-This project is created for educational purposes as part of a Computer Networks course.
-
-## 🤝 Contributing
-
-This is an academic project. For educational use only.
-
----
-
-**Happy HTTP Serving! 🚀**
+## This is a project for Computer Network Course 
