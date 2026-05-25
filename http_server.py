@@ -229,13 +229,15 @@ class HTTPServer:
         """Process HTTP request and return response"""
         # Validate Host header
         host_header = request.headers.get('host', '')
-        expected_host = f"{self.host}:{self.port}"
         if not host_header:
             self.log(f"Missing Host header from {address[0]}", "WARNING")
             return self.create_error_response(400, "Bad Request", "Missing Host header")
-        elif host_header != expected_host and host_header != self.host:
-            self.log(f"Invalid Host header '{host_header}' from {address[0]}", "WARNING")
-            return self.create_error_response(403, "Forbidden", "Invalid Host header")
+        # When bound to 0.0.0.0, accept any host; otherwise enforce the configured host
+        if self.host != '0.0.0.0':
+            expected_host = f"{self.host}:{self.port}"
+            if host_header != expected_host and host_header != self.host:
+                self.log(f"Invalid Host header '{host_header}' from {address[0]}", "WARNING")
+                return self.create_error_response(403, "Forbidden", "Invalid Host header")
         
         # Handle different HTTP methods
         if request.method == 'GET':
@@ -346,19 +348,18 @@ class HTTPServer:
     
     def validate_path(self, path):
         """Validate path to prevent directory traversal"""
-        # Decode URL encoding
         decoded_path = unquote(path)
-        
-        # Check for directory traversal patterns
+
         dangerous_patterns = ['../', '..\\', '..%2f', '..%5c']
         for pattern in dangerous_patterns:
             if pattern in decoded_path.lower():
                 return False
-        
-        # Check for absolute paths
-        if os.path.isabs(decoded_path):
+
+        # Strip leading slash (all URL paths start with /) then check the remainder
+        stripped = decoded_path.lstrip('/')
+        if os.path.isabs(stripped):
             return False
-        
+
         return True
     
     def create_error_response(self, status_code, status_text, message=""):

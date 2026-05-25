@@ -43,7 +43,8 @@ def start_client():
     size = int(input('Enter total file size in bytes: '))
     pieces = (size + PIECE_SIZE - 1) // PIECE_SIZE
     outpath = os.path.join(DOWNLOAD_PATH, filename)
-    open(outpath, 'wb').truncate(size)
+    with open(outpath, 'wb') as f:
+        f.truncate(size)
     threads = []
     for i in range(pieces):
         peer = peers[i % len(peers)]
